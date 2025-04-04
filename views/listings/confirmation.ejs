@@ -1,0 +1,29 @@
+<% layout("/layouts/boilerplate") -%>
+
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <br><br>
+            <div class="card shadow-sm p-4">
+                <h3 class="text-success text-center">🎉 Reservation Confirmed!</h3>
+                <p class="text-center">Thank you for booking with <strong>Wanderlust</strong>. Your reservation details are below.</p>
+
+                <div class="border p-3 rounded bg-light">
+                    <h5 class="text-center"><strong>Your Listing:</strong> <%= listing.title %></h5>
+                    <img src="<%= listing.image.url %>" alt="Listing Image" class="img-fluid rounded my-2"  style="max-height: 200px; width:300px;">
+
+                    <p><strong>Check-in:</strong> <%= reservation.checkin.toDateString() %></p>
+                    <p><strong>Check-out:</strong> <%= reservation.checkout.toDateString() %></p>
+                    <p><strong>Guests:</strong> <%= reservation.guests %></p>
+                    <p><strong>Total Price (incl. GST):</strong> $<%= reservation.totalPrice.toFixed(2) %></p>
+                    <p class="text-center"><strong>Pay at the time of check-in.🤗</strong></p>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/home" class="btn btn-dark">🏠 Go to Homepage</a>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,461 @@
+<% layout("/layouts/boilerplate") -%>
+<style>
+/* Default: Sidebar Visible on Large Screens */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1001;
+}
+
+/* Only Hide Sidebar by Default on Small Screens */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* Filter Button: Only Appears on Small Screens */
+.filter-btn {
+  display: none; /* Hide by default */
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: #FF5A5F; /* Airbnb red */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1002;
+}
+
+@media (max-width: 768px) {
+  .filter-btn {
+    display: block; /* Show button on small screens */
+  }
+}
+
+/* Close Button Inside Sidebar */
+.close-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Card styling */
+.listing-card {
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  width: 100%;
+}
+
+.listing-card:hover {
+  transform: scale(1.02);
+}
+
+.card-body {
+  padding: 1rem;
+}
+/* Small screen filter toggle button */
+.filter-toggle-btn {
+  display: none;
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  z-index: 1100;
+  background-color: #FF5A5F;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+/* Show button only on small screens */
+@media (max-width: 768px) {
+  .filter-toggle-btn {
+    display: block;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    position: fixed;
+    z-index: 1200;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .move {
+    margin-left: 0 !important;
+  }
+
+  #main-content {
+    margin-left: 0 !important;
+  }
+
+  .close-sidebar-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+/* Layout shift for desktop */
+#main-content {
+  margin-left: 280px;
+  padding: 1rem;
+}
+
+
+  /* Tax toggle inside card */
+  .tax-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .tax-info {
+    display: none;
+    color: red;
+    font-weight: bold;
+  }
+
+  /* Toggle Switch */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+
+  input:checked + .slider {
+    background-color: #4CAF50;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(14px);
+  }
+   /* Custom Airbnb Red Slider */
+   .airbnb-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #FF385C; /* Airbnb Red */
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+  }
+
+  /* Hover & Focus Effects */
+  .airbnb-slider:hover {
+    opacity: 1;
+  }
+
+  /* Customizing Thumb (Chrome, Safari, Edge) */
+  .airbnb-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #FF385C; /* Airbnb Red */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Customizing Thumb (Firefox) */
+  .airbnb-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #FF385C; /* Airbnb Red */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  }
+  /* Show Sidebar When Toggled */
+.show-sidebar {
+  transform: translateX(0) !important;
+}
+#mainListings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Ensures a minimum card width */
+  gap: 20px; /* Adjust spacing between cards */
+  justify-content: center; /* Centers items */
+  padding: 20px;
+  max-width: 1200px; /* Prevents stretching too much */
+  margin: auto; /* Centers grid container */
+}
+
+/* Ensure each listing card maintains its structure */
+.listing-card {
+  width: 100%; /* Takes full width of the grid column */
+  max-width: 350px; /* Keeps cards readable */
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  margin: auto; /* Centers the card properly */
+}
+
+
+
+</style>
+
+<body>
+  <!-- Filter Toggle Button (for mobile) -->
+<button id="filterToggleBtn" class="filter-toggle-btn">Filters</button>
+
+  <!-- Filter Toggle Button (visible only on small screens) -->
+<!-- <button class="filter-toggle " onclick="toggleSidebar()">☰Filters</button> -->
+
+<!-- Sidebar (hidden on mobile, toggled with button) -->
+<div class="sidebar" id="filterSidebar">
+  <div class="sidebar-header">
+    <h2 class="sidebar-title">Filters</h2>
+    <!-- Close Button -->
+    <span id="closeSidebarBtn" class="close-sidebar-btn">&times;</span>
+
+    <!-- <span class="close-btn" onclick="toggleSidebar()">&times;</span> -->
+  </div>
+  <div class="sidebar-body">
+    <!-- Property Type Dropdown -->
+    <div class="mb-3">
+      <label for="propertyType" class="form-label">Property Type:</label>
+      <select id="propertyType" class="form-select">
+        <option class="filter" value="">All</option>
+        <option class="filter" value="Rooms">Rooms</option>
+        <option class="filter" value="Iconic Cities">Iconic Cities</option>
+        <option class="filter" value="Mountains">Mountains</option>
+        <option class="filter" value="Castles">Castles</option>
+        <option class="filter" value="Amazing Pools">Amazing Pools</option>
+        <option class="filter" value="Camping">Camping</option>
+        <option class="filter" value="Farms">Farms</option>
+        <option class="filter" value="Arctic">Arctic</option>
+        <option class="filter" value="Domes">Domes</option>
+        <option class="filter" value="Boats">Boats</option>
+        <option class="filter" value="Forest Retreats">Forest Retreats</option>
+        <option class="filter" value="Urban Stays">Urban Stays</option>
+        <option class="filter" value="Beachfront">Beachfront</option>
+        <option class="filter" value="Private Homes">Private Homes</option>
+      </select>
+    </div>
+
+    <!-- Price Range Slider -->
+    <div class="mb-3">
+      <label for="priceRange" class="form-label">Price Range:</label>
+      <input type="range" id="minPrice" class="form-range airbnb-slider" min="0" max="100000" step="500" value="0">
+      <input type="range" id="maxPrice" class="form-range airbnb-slider" min="0" max="100000" step="500" value="100000">
+      <div>
+        <span>Min: ₹<span id="minPriceValue">0</span></span>
+        <span style="margin-left: 20px;">Max: ₹<span id="maxPriceValue">100000</span></span>
+      </div>
+    </div>
+
+    <!-- Sorting Dropdown -->
+    <div class="mb-3">
+      <label for="sortOrder" class="form-label">Sort By:</label>
+      <select id="sortOrder" class="form-select">
+        <option value="">None</option>
+        <option value="lowToHigh">Price: Low to High</option>
+        <option value="highToLow">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+  <!-- Main content -->
+  <div id="main-content">
+    <div id="mainListings" class="mt-3">
+      <% for(let listing of allListings) { %>
+        <a href="/listings/<%=listing._id %>" class="listing-links">
+          <div class="card listing-card col listing" data-category="<%= listing.propertyType %>" data-price ="<%= listing.price %>">
+            <img
+              src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1618220179428-8fd6b3f79e15' %>"
+              class="card-img-top img" alt="listing_image" style="height:20rem">
+            <div class="card-img-overlay"></div>
+            <div class="card-body">
+              <p class="card-text">
+                <b><%= listing.title %></b><br>
+                &#8377; <%= listing.price.toLocaleString("en-IN") %>/night
+                <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+              </p>
+              
+              <!-- Individual tax toggle per listing -->
+              <div class="tax-toggle">
+                <span>Show Total with Tax</span>
+                <label class="switch">
+                  <input type="checkbox" class="tax-switch">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </a>
+      <% } %>
+    </div>
+  </div>
+  
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("filterSidebar");
+    const filterBtn = document.getElementById("filterToggleBtn");
+    const closeBtn = document.getElementById("closeSidebarBtn");
+
+    function toggleSidebar() {
+        sidebar.classList.toggle("open");
+
+        // Hide filter button when sidebar is open
+        if (sidebar.classList.contains("open")) {
+            filterBtn.style.display = "none";
+        } else {
+            filterBtn.style.display = "block";
+        }
+    }
+
+    // Open sidebar when filter button is clicked
+    filterBtn.addEventListener("click", toggleSidebar);
+
+    // Close sidebar when close button is clicked
+    closeBtn.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        filterBtn.style.display = "block"; // Show filter button again
+    });
+
+   // Tax toggle visibility
+   document.querySelectorAll(".tax-switch").forEach((switchButton, index) => {
+        switchButton.addEventListener("click", () => {
+          let taxInfo = document.querySelectorAll(".tax-info")[index];
+          taxInfo.style.display = taxInfo.style.display === "inline" ? "none" : "inline";
+        });
+      });
+
+  // Filter logic (update this to include no results & valid min/max checks)
+  const propertyTypeSelect = document.getElementById("propertyType");
+  const minPriceSlider = document.getElementById("minPrice");
+  const maxPriceSlider = document.getElementById("maxPrice");
+  const minPriceValue = document.getElementById("minPriceValue");
+  const maxPriceValue = document.getElementById("maxPriceValue");
+  const sortOrderSelect = document.getElementById("sortOrder");
+  const listingsContainer = document.getElementById("mainListings");
+
+  const originalListings = Array.from(document.querySelectorAll(".listing-card"));
+
+  minPriceValue.textContent = minPriceSlider.value;
+  maxPriceValue.textContent = maxPriceSlider.value;
+
+  function filterListings() {
+    let selectedType = propertyTypeSelect.value;
+    let minPrice = parseInt(minPriceSlider.value);
+    let maxPrice = parseInt(maxPriceSlider.value);
+    let sortOrder = sortOrderSelect.value;
+
+    // Swap if min > max
+    if (minPrice > maxPrice) {
+      [minPrice, maxPrice] = [maxPrice, minPrice];
+      minPriceSlider.value = minPrice;
+      maxPriceSlider.value = maxPrice;
+      minPriceValue.textContent = minPrice;
+      maxPriceValue.textContent = maxPrice;
+    }
+
+    let filtered = originalListings;
+
+    if (selectedType) {
+      filtered = filtered.filter(listing => listing.getAttribute("data-category") === selectedType);
+    }
+
+    filtered = filtered.filter(listing => {
+      let price = parseInt(listing.getAttribute("data-price"));
+      return price >= minPrice && price <= maxPrice;
+    });
+
+    if (sortOrder === "lowToHigh") {
+      filtered.sort((a, b) => parseInt(a.getAttribute("data-price")) - parseInt(b.getAttribute("data-price")));
+    } else if (sortOrder === "highToLow") {
+      filtered.sort((a, b) => parseInt(b.getAttribute("data-price")) - parseInt(a.getAttribute("data-price")));
+    }
+
+    listingsContainer.innerHTML = "";
+
+    if (filtered.length > 0) {
+      filtered.forEach(listing => listingsContainer.appendChild(listing));
+    } else {
+      listingsContainer.innerHTML = `<p style="padding: 20px; font-weight: bold;">No results found.</p>`;
+    }
+  }
+
+  // Live event listeners
+  propertyTypeSelect.addEventListener("change", filterListings);
+  minPriceSlider.addEventListener("input", () => {
+    minPriceValue.textContent = minPriceSlider.value;
+    filterListings();
+  });
+  maxPriceSlider.addEventListener("input", () => {
+    maxPriceValue.textContent = maxPriceSlider.value;
+    filterListings();
+  });
+  sortOrderSelect.addEventListener("change", filterListings);
+  
+});
+</script>
+    
+</body>    

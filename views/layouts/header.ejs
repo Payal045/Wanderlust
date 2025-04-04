@@ -1,0 +1,186 @@
+<style>
+   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap');
+
+/* Navbar styling */
+.navbar {
+    position: fixed;
+    background-color: #201e1e;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+/* Navbar brand */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 10px;
+}
+
+/* Navbar brand icon */
+.navbar-brand i {
+    font-size: 45px;
+    color: #FF5A5F;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Logo */
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+}
+
+/* Dropdown container */
+.dropdown {
+    position: relative;
+    margin-right: 40px;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background: none;
+    border: none;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+/* Dropdown icon */
+.dropbtn i {
+    color: white;
+    transition: color 0.3s ease;
+}
+
+/* Dropdown content */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #333;
+    min-width: 180px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    overflow: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Dropdown links */
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+/* Hover effect on dropdown links */
+.dropdown-content a:hover {
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .navbar-brand i {
+        font-size: 35px;
+        width: 35px;
+        height: 35px;
+    }
+
+    .dropbtn {
+        font-size: 30px;
+    }
+
+    .dropdown {
+        margin-right: 20px;
+    }
+
+    .dropdown-content {
+        min-width: 150px;
+    }
+
+    .dropdown-content a {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 20px;
+    }
+
+    .navbar-brand i {
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .dropbtn {
+        font-size: 26px;
+    }
+
+    .dropdown {
+        margin-right: 10px;
+    }
+
+    .dropdown-content {
+        min-width: 140px;
+    }
+
+    .dropdown-content a {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+}
+
+</style>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<header>
+    <nav class="navbar">
+        <a class="navbar-brand"><i class="fa-regular fa-compass"></i>
+            <span class="logo">Wanderlust</span></a>
+        <div class="dropdown">
+            <button class="dropbtn">
+                <i class="fa-solid fa-bars"></i> <!-- Dropdown icon -->
+            </button>
+            <div class="dropdown-content">
+                <a href="/home#home">Home</a>
+                <a href="/signup">List Your Property</a>
+                <a href="/home#about">About Us</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+</header>

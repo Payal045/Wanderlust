@@ -1,0 +1,296 @@
+<% layout("/layouts/boilerplate") -%>
+<head><link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<style>
+/* Airbnb-style reservation card */
+.airbnb-card {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+}
+.airbnb-card:hover {
+    transform: scale(1.02);
+}
+
+/* Input fields */
+.airbnb-input {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Airbnb-style button */
+.airbnb-button {
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #FF5A5F;
+    border: none;
+    transition: background 0.3s ease-in-out;
+}
+.airbnb-button:hover {
+    background-color: #D93B3E;
+}
+.reservation-wrapper {
+    position: fixed;
+    right: 100px; 
+    width: 400px; 
+    height: 400px;
+    z-index: 1000; 
+    background-color: white;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    top: calc(30vh - 100px);
+    transform: none;
+}
+#map {
+    width: 100%;       /* Full width */
+    height: 300px;     /* Adjust as needed */
+    border-radius: 10px; /* Optional: Rounded edges */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Optional: Soft shadow */
+}
+@media (max-width: 768px) {
+  .reservation-wrapper {
+    position: relative;       /* Take it out of fixed position */
+    width: 70%;               /* Keep it card-sized */
+    margin: 20px auto;        /* Center it with some spacing */
+    height: auto;             /* Allow it to grow naturally */
+    top: unset;
+    right: unset;
+    transform: none;
+  }
+  .details{
+    width: 100% !important; 
+  }
+  .img{
+    height: 200px !important;
+  }
+  .review{
+    width: 100% !important; 
+  }
+  
+  #map {
+    width: 150% !important;   /* Force full width on small screens */
+    box-sizing: border-box;
+    padding: 0 10px;
+  }
+}
+
+</style>
+<body>
+    
+    <div class="row mt-4">
+        <div class="col-8">
+            <h3>
+                <%= listing.title %>
+            </h3>
+        </div>
+        <div class="details card col-6 show-card listing-card">
+            <img src="<%= listing.image.url || 'https://images.unsplash.com/photo-1618220179428-8fd6b3f79e15' %>"
+                class="card-img-top show-img img" alt="listing_image">
+            <div class="card-body">
+                <p class="card-text">
+                    Owned by: <i><%= listing.owner ? listing.owner.username : "Unknown Owner" %></i>
+                </p>
+                <p class="card-text"><%= listing.description %></p>
+                <p class="card-text">&#8377; <%= listing.price.toLocaleString("en-IN") %></p>
+                <p class="card-text"><%= listing.location %></p>
+                <p class="card-text"><%= listing.country %></p>
+            </div>
+        </div>
+
+        <% if(currUser && listing.owner && currUser._id.equals(listing.owner._id)){%>
+            <div class="btns mt-4 d-flex flex-column flex-sm-row gap-2">
+                <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn">Edit</a>
+                <form method="post" action="/listings/<%= listing._id %>?_method=DELETE">
+                    <button class="btn btn-dark">Delete</button>
+                </form>
+            </div>
+            
+        <%}%>
+
+        <!-- Reservation Card -->
+            <div class="card airbnb-card col-5 offset-4 mt-4 mb-3 reservation-wrapper">
+                <div class="card-body">
+                    <h4 class="text-center fw-bold mb-3">Reserve Now</h4>
+                    <p class="text-center fw-bold fs-5">
+                        <span id="pricePerNight">&#8377;<%= listing.price.toLocaleString("en-IN") %></span> / night
+                    </p>
+                    <form method="post" action="/listings/<%= listing._id %>/reserve">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="checkin" class="form-label">Check-in Date</label>
+                                    <input type="date" name="reservation[checkin]" id="checkin" class="form-control airbnb-input" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="checkout" class="form-label">Check-out Date</label>
+                                    <input type="date" name="reservation[checkout]" id="checkout" class="form-control airbnb-input" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="guests" class="form-label">Number of Guests</label>
+                            <input type="number" name="reservation[guests]" id="guests" class="form-control airbnb-input" min="1" required>
+                        </div>
+        
+                        <!-- Total Price Display -->
+                        <div class="mb-3 text-center">
+                            <h5>Total Price: <span id="totalPrice">₹0</span></h5>
+                        </div>
+        
+                        <a><button class="btn btn-danger w-100 airbnb-button">Reserve</button>
+                    </form>
+                </div>
+            </div>
+        
+            <!-- JavaScript for Total Price Calculation -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const checkinInput = document.getElementById("checkin");
+                    const checkoutInput = document.getElementById("checkout");
+                    const guestsInput = document.getElementById("guests");
+                    const totalPriceElement = document.getElementById("totalPrice");
+                    const pricePerNightPerGuest = Number("<%= listing.price %>");
+            
+                    function calculateTotalPrice() {
+                        const checkinDate = new Date(checkinInput.value);
+                        const checkoutDate = new Date(checkoutInput.value);
+                        const guests = parseInt(guestsInput.value) || 1; // Default to 1 guest if empty
+            
+                        if (!isNaN(checkinDate) && !isNaN(checkoutDate) && guests > 0) {
+                            if (checkoutDate > checkinDate) {
+                                const nights = (checkoutDate - checkinDate) / (1000 * 60 * 60 * 24);
+                                const totalPrice = nights * pricePerNightPerGuest * guests;
+                                totalPriceElement.textContent = "₹" + totalPrice.toLocaleString("en-IN");
+
+                            } else {
+                                totalPriceElement.textContent = "₹0";
+                            }
+                        } else {
+                            totalPriceElement.textContent = "₹0";
+                        }
+                    }
+            
+                    checkinInput.addEventListener("input", calculateTotalPrice);
+                    checkoutInput.addEventListener("input", calculateTotalPrice);
+                    guestsInput.addEventListener("input", calculateTotalPrice);
+                });
+            </script>
+            
+       
+        
+
+        <div class="review col-8 mb-3">
+            <hr>
+            <% if(currUser) {%>
+            <h4>Leave a Review</h4>
+            <form method="post" action="/listings/<%=listing._id%>/reviews" novalidate class="needs-validation">
+                <div class="mb-3 mt-3">
+                    <label for="review[rating]" class="form-label"></label>
+                    <fieldset class="starability-slot">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="comment" class="form-label">Comments</label>
+                    <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control"></textarea>
+                    <div class="invalid-feedback">Please enter some comments for review.</div>
+                </div>
+                <button class="btn btn-outline-dark">Submit</button>
+            </form>
+            <hr />
+            <%}%>
+
+            <% if(listing.reviews.length >0){%>
+            <div class="row">
+                <p><b>All Reviews</b></p>
+                <% for(review of listing.reviews){%>
+                    <div class="card col-5 ms-3 mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">@<%= review.author.username%></h5>
+                            <p class="starability-result card-text" data-rating="<%=review.rating%>"></p>
+                            <p class="card-text">
+                                <%=review.comment%>
+                            </p>
+                            <form method="post"
+                                action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE"
+                                class="mb-3">
+                                <button class="btn btn-sm btn-dark">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                <%}%>
+            </div>
+            <%}%>
+        </div>
+    </div>
+    <br><br>
+    <div class="col-8 mb-3">
+        <h2>You'll be here:</h2>
+        <div id="map" style="height: 400px; width: 100%;"></div>
+      </div>
+      
+      <!-- Leaflet JS -->
+      <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          var lat = ('<%= listing.lat %>');
+          var lng = ('<%= listing.lng %>');
+      
+          console.log("🗺️ Initializing map at:", lat, lng);
+      
+          if (isNaN(lat) || isNaN(lng)) {
+            console.warn("⚠️ Invalid coordinates. Cannot load map.");
+            return;
+          }
+      
+          var map = L.map("map").setView([lat, lng], 12);
+      
+          var API_KEY = "15cafc71d5aa43d7a5e756707b8e3210"; // Thunderforest API Key
+      
+          L.tileLayer(
+            `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${API_KEY}`,
+            {
+              attribution: '&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>',
+            }
+          ).addTo(map);
+      
+          var customIcon = L.icon({
+            iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -35]
+          });
+          console.log("🧭 LAT:", lat);
+          console.log("🧭 LNG:", lng);
+
+
+          L.marker([lat, lng], { icon: customIcon })
+            .addTo(map)
+            .bindPopup(`<b><%= listing.name %></b><br><%= listing.location %>`)
+            .openPopup();
+      
+          console.log("📍 Map marker added at:", lat, lng);
+        });
+      </script>
+      
+    </div>
+</body>

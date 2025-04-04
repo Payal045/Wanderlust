@@ -1,0 +1,66 @@
+<% layout("/layouts/boilerplate") -%>
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <br><br>
+            <h3 class="offset-3">Reserve <%= listing.title %> :</h3>
+            <div class="mb-3 offset-4">
+                <img src="<%= listing.image.url %>" style="height: 200px; width: 250px; opacity: 0.95; border-radius: 10px;"/>
+            </div>  
+            <form id="reservation-form" action="/listings/<%= listing._id %>/confirm" method="POST" class="needs-validation" novalidate>
+                <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="checkin" class="form-label">Check-in Date</label>
+                    <input type="date" id="checkin" name="checkin" class="form-control" required>
+                    <div class="invalid-feedback">Please select a check-in date.</div>
+                </div>
+
+                <div class="mb-3 col-md-6">
+                    <label for="checkout" class="form-label">Check-out Date</label>
+                    <input type="date" id="checkout" name="checkout" class="form-control" required>
+                    <div class="invalid-feedback">Please select a check-out date.</div>
+                </div>
+                </div>
+                <div class="mb-3">
+                    <label for="guests" class="form-label">Number of Guests</label>
+                    <input type="number" id="guests" name="guests" class="form-control" min="1" required>
+                    <div class="invalid-feedback">Please enter a valid number of guests.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Enter Your Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                    <div class="invalid-feedback">Please enter a valid email.</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><p><strong>Price per Night:</strong> ₹<%= listing.price %></p></div>
+                    <div class="col-md-4"><p><strong>GST (5%):</strong> <span id="gst">₹0</span></p></div>
+                    <div class="col-md-4"><p><strong>Total Price:</strong> <span id="total-price">₹0</span></p></div>
+                </div>
+
+                <div class="mb-3 mt-3 offset-4">
+                    <button type="submit" class="btn btn-dark">Confirm Reservation</button>
+                </div>
+            </form>
+            <br><br>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('reservation-form').addEventListener('input', function() {
+            let pricePerNight = Number(`<%= listing.price %>`);
+            let checkin = new Date(document.getElementById('checkin').value);
+            let checkout = new Date(document.getElementById('checkout').value);
+
+            if (!isNaN(checkin) && !isNaN(checkout) && checkout > checkin) {
+                let nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+                let basePrice = pricePerNight * nights;
+                let gst = basePrice * 0.05;
+                let totalPrice = basePrice + gst;
+
+                document.getElementById('gst').innerText = `$₹{gst.toFixed(2)}`;
+                document.getElementById('total-price').innerText = `$₹{totalPrice.toFixed(2)}`;
+            }
+        });
+    </script>
+</body>

@@ -1,0 +1,67 @@
+<% layout("/layouts/boilerplate") -%>
+<body>
+    <br><br>
+    <div class="row">
+        <div class="col-8 offset-2">
+    <h3>Edit Listing</h3>
+    <form method="post" action="/listings/<%=listing._id%>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input name="listing[title]" value="<%= listing.title%>" type="text" class="form-control" required/>
+            <div class="valid-feedback">Title looks good!</div></div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="listing[description]" type="text" class="form-control" required><%= listing.description%></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="propertyType" class="form-label">Property Type:</label>
+            <select id="propertyType" name="listing[propertyType]" class="form-select" required>
+                <option value="">Select a Property Type</option>
+                <option value="Rooms">Rooms</option>
+                <option value="Iconic Cities">Iconic Cities</option>
+                <option value="Mountains">Mountains</option>
+                <option value="Castles">Castles</option>
+                <option value="Amazing Pools">Amazing Pools</option>
+                <option value="Camping">Camping</option>
+                <option value="Farms">Farms</option>
+                <option value="Arctic">Arctic</option>
+                <option value="Domes">Domes</option>
+                <option value="Boats">Boats</option>
+                <option value="Forest Retreats">Forest Retreats</option>
+                <option value="Urban Stays">Urban Stays</option>
+                <option value="Beachfront">Beachfront</option>
+                <option value="Private Homes">Private Homes</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            Original Listing Image<br/>
+            <img src="<%= originalImageUrl %>"/>
+        </div>  
+        <div class="mb-3">
+            <label for="image" class="form-label">Upload new Image URL</label>
+            <input name="image" 
+                  type="file" class="form-control"/>
+        </div>        
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input name="listing[price]" value="<%= listing.price%>" type="number" class="form-control" required/>
+                    <div class="invalid-feedback">Enter valid price!</div> </div>
+            </div>
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input name="listing[location]" value="<%= listing.location%>" type="text" class="form-control" required/>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="country" class="form-label">Country</label>
+            <input name="listing[country]" value="<%= listing.country%>" type="text" class="form-control" required/>
+        </div>
+        <button class="btn btn-dark edit-btn">Edit</button>
+    </div>   
+</div><br><br>
+</body>

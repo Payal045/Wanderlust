@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <%- include('../layouts/header.ejs') %>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <img src="https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="hero-bg">
+            <h1>Find Your Perfect Stay, Anywhere in the World</h1>
+            <div class="cta-buttons">
+                <a href="/listings"><button class="btn book">Book Now</button></a>
+                <!-- <a href="/login"><button class="btn list">List Your Property</button></a> -->
+            </div>
+        </div>
+    </section>
+
+    <section class="why-choose-us" id="about">
+        <h1>Why Choose Us?</h1>
+        <p class="description">At Wanderlust, we turn your travel dreams into reality! Whether you’re seeking breathtaking landscapes, cultural adventures, or a peaceful escape, we craft unforgettable experiences tailored just for you. Our expert-curated itineraries, hassle-free bookings, and 24/7 support ensure a seamless journey. With a passion for exploration and a commitment to excellence, we bring you the best destinations, hidden gems, and unique travel moments. Choose Wanderlust and let every trip be an adventure worth remembering! 🌍✨</p>
+        <div class="features">
+            <div class="feature"><i class="fas fa-star"></i><div class="feature-content">Luxury Stays
+            <p >Indulge in world-class comfort and premium accommodations. From breathtaking penthouses to cozy boutique villas, we offer stays that redefine luxury, ensuring an unforgettable experience and personalized services.</p></div>
+            </div> 
+            <div class="feature"><i class="fas fa-lock"></i><div class="feature-content"> Secure Booking
+            <p >Book with confidence! Our platform ensures a safe and hassle-free booking experience with encrypted payments, verified listings, and robust security measures to protect your information at every step.</p></div>
+            </div>
+            <div class="feature"><i class="fas fa-headset"></i><div class="feature-content"> 24/7 Support
+            <p>Got questions? Need help? Our round-the-clock support ensures you're never alone on your journey. Chat, call, or email us anytime!</p></div>
+        </div></div>
+    </section>
+
+    <section class="trending">
+        <h2>Trending Destinations</h2>
+        <div class="destination-grid">
+            <div class="destination" data-title="Paris">
+                <img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Paris">
+            </div>
+            <div class="destination" data-title="New York">
+                <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="New York">
+            </div>
+            <div class="destination" data-title="Bali">
+                <img src="https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Bali">
+            </div>
+        </div>
+        <a class="more" href="/listings" style="text-decoration:none; color: black;">
+            <h3>Click here to see more...</h3>
+          </a>
+          
+    </section>
+    
+
+    <section class="testimonials">
+        <h1>What Our Guests Say</h1>
+        <img src="https://images.unsplash.com/photo-1526554850534-7c78330d5f90?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="hero-bg">
+        <div class="testimonial-slider">
+            <div class="testimonial">
+                <p>"Amazing experience! The best stay ever!" - <strong>Emily</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"The place was beautiful, and the service was top-notch!" - <strong>John</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"Would definitely recommend it to my friends and family!" - <strong>Sophia</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"A truly unforgettable stay! The ambiance was perfect." - <strong>Michael</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"The best hospitality I've ever experienced. Felt like home!" - <strong>Jessica</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"From booking to checkout, everything was seamless!" - <strong>Daniel</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"Loved the cozy atmosphere and beautiful views." - <strong>Emma</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"Super clean and well-maintained property. 10/10!" - <strong>Ryan</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"The location was perfect for exploring the city!" - <strong>Olivia</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"Friendly staff, luxury amenities, and peaceful surroundings!" - <strong>Ethan</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"Absolutely worth it! Can't wait to visit again." - <strong>Ava</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"The service was outstanding. Exceeded my expectations!" - <strong>Liam</strong></p>
+            </div>
+            <div class="testimonial">
+                <p>"One of the best vacations I've ever had!" - <strong>Isabella</strong></p>
+            </div>
+            
+        </div>
+    </section>
+    <section class="contact-section" id="contact">
+        <h2>Contact Us</h2>
+        <p>Have questions or feedback? Reach out to us and we’ll get back to you shortly!</p>
+      
+        <form class="contact-form" action="/contact" method="POST">
+          <input type="text" name="name" placeholder="Your Name" required />
+          <input type="email" name="email" placeholder="Your Email" required />
+          <input type="text" name="subject" placeholder="Subject Type: Feedback or Review" />
+          <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+          <button type="submit" class="btn">Send Message</button>
+        </form>
+      </section>
+      
+    
+
+    <%- include('../includes/footer.ejs') %>
+    <script>
+        let index = 0;
+        function showNextTestimonial() {
+            const testimonials = document.querySelectorAll(".testimonial");
+            testimonials.forEach((t, i) => {
+                t.style.display = i === index ? "block" : "none";
+            });
+            index = (index + 1) % testimonials.length;
+        }
+        setInterval(showNextTestimonial, 3000);
+        showNextTestimonial(); // Initialize first one
+    </script>
+    
+    <script src="/js/home.js"></script>
+</body>
+</html>

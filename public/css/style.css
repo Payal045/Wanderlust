@@ -1,0 +1,170 @@
+body {
+   font-family: "Plus Jakarta Sans", serif !important;
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+
+.container {
+   flex: 1;
+   width: 100%;
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 0 15px;
+}
+
+/* Navbar */
+.navbar {
+   height: 5rem;
+   background-color: white;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 0 1rem;
+}
+
+.fa-compass {
+   color: #fe424d;
+   font-size: 2rem;
+}
+
+.nav-link {
+   color: #222222 !important;
+}
+
+/* Footer */
+.f-info {
+   text-align: center;
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   align-items: center;
+   background-color: #ebebeb;
+   padding: 1rem 0;
+}
+
+.f-info-links,
+.f-info-socials,
+.f-info-brand {
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 1rem;
+   flex-wrap: wrap;
+}
+
+.f-info-socials i {
+   font-size: 1.25rem;
+   margin-right: 0.75rem;
+}
+
+.f-info-links a {
+   text-decoration: none;
+   color: #222222;
+}
+
+.f-info-links a:hover {
+   text-decoration: underline;
+   color: #222222;
+}
+
+/* Cards */
+.listing-card {
+   border: none !important;
+   margin-bottom: 2rem;
+   transition: transform 0.3s ease-in-out;
+}
+
+.listing-card:hover {
+   transform: scale(1.03);
+}
+
+.card-img-top {
+   border-radius: 1rem !important;
+   width: 100% !important;
+   height: auto;
+   object-fit: cover !important;
+}
+
+/* Text & Buttons */
+.card-body {
+   padding: 0 !important;
+}
+
+.card-text {
+   font-weight: 400 !important;
+   color: #222222;
+}
+
+.listing-links {
+   text-decoration: none;
+}
+
+.card-img-overlay {
+   opacity: 0 !important;
+   background-color: white;
+}
+
+.card-img-overlay:hover {
+   opacity: 0.2 !important;
+}
+
+.show-img {
+   width: 100%;
+   height: 30vh;
+   object-fit: cover;
+}
+
+/* Buttons */
+.btns {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+}
+
+.edit-btn {
+   background-color: #fe424d !important;
+   border: none !important;
+   color: white;
+   padding: 0.5rem 1.5rem;
+   border-radius: 5px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+   .navbar {
+       flex-direction: column;
+       height: auto;
+       padding: 10px 0;
+   }
+
+   .listing-card {
+       width: 100%;
+   }
+
+   .btns {
+       flex-direction: column;
+       align-items: center;
+   }
+}
+
+@media (max-width: 768px) {
+   .f-info {
+       flex-direction: column;
+       height: auto;
+       padding: 20px;
+   }
+
+   .listing-card {
+       width: 100%;
+   }
+
+   .show-img {
+       height: 20vh;
+   }
+
+   .btns {
+       justify-content: center;
+   }
+}
