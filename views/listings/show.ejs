@@ -264,7 +264,7 @@
       
           var map = L.map("map").setView([lat, lng], 12);
       
-          var API_KEY = "15cafc71d5aa43d7a5e756707b8e3210"; // Thunderforest API Key
+          var API_KEY = process.env.MAP_SECRET; // Thunderforest API Key
       
           L.tileLayer(
             `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${API_KEY}`,
